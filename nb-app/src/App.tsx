@@ -8,6 +8,7 @@ import { formatBalance } from './services/balanceService';
 import { preloadPrompts } from './services/promptService';
 import { Settings, Sun, Moon, Github, ImageIcon, DollarSign, Download, Sparkles, Key, BookOpen } from 'lucide-react';
 import { lazyWithRetry, preloadComponents } from './utils/lazyLoadUtils';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy load components
 const ApiKeyModal = lazyWithRetry(() => import('./components/ApiKeyModal').then(module => ({ default: module.ApiKeyModal })));
@@ -309,6 +310,7 @@ const App: React.FC = () => {
       </Suspense>
       <ToastContainer />
       <GlobalDialog />
+      <SpeedInsights />
     </div>
   );
 };
