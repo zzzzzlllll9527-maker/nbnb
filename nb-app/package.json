@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.30.0",
+    "@vercel/speed-insights": "^2.0.0",
     "idb-keyval": "^6.2.2",
     "jszip": "^3.10.1",
     "lucide-react": "^0.554.0",
