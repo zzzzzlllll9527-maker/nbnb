@@ -6,7 +6,7 @@ import { ToastContainer } from './components/ui/ToastContainer';
 import { GlobalDialog } from './components/ui/GlobalDialog';
 import { formatBalance } from './services/balanceService';
 import { preloadPrompts } from './services/promptService';
-import { Settings, Sun, Moon, Github, ImageIcon, DollarSign, Download, Sparkles, Key, BookOpen } from 'lucide-react';
+import { Settings, Sun, Moon, ImageIcon, DollarSign, Sparkles, Key} from 'lucide-react';
 import { lazyWithRetry, preloadComponents } from './utils/lazyLoadUtils';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
@@ -17,42 +17,8 @@ const ImageHistoryPanel = lazyWithRetry(() => import('./components/ImageHistoryP
 const PromptLibraryPanel = lazyWithRetry(() => import('./components/PromptLibraryPanel').then(module => ({ default: module.PromptLibraryPanel })));
 
 const App: React.FC = () => {
-  const { apiKey, setApiKey, settings, updateSettings, isSettingsOpen, toggleSettings, imageHistory, balance, fetchBalance, installPrompt, setInstallPrompt } = useAppStore();
+  const { apiKey, setApiKey, settings, updateSettings, isSettingsOpen, toggleSettings, imageHistory, balance, fetchBalance } = useAppStore();
   const { togglePromptLibrary, isPromptLibraryOpen, showApiKeyModal, setShowApiKeyModal } = useUiStore();
-
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setInstallPrompt(e);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
-  }, [setInstallPrompt]);
-
-  const handleInstallClick = async () => {
-    if (!installPrompt) return;
-    
-    // Show the install prompt
-    installPrompt.prompt();
-    
-    // Wait for the user to respond to the prompt
-    const { outcome } = await installPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    
-    // We've used the prompt, and can't use it again, throw it away
-    setInstallPrompt(null);
-  };
 
   // Preload components and prompt data after mount
   useEffect(() => {
@@ -139,9 +105,6 @@ const App: React.FC = () => {
           </a>
           <div className="hidden sm:block">
             <h1 className="text-lg font-bold tracking-tight text-amber-600 dark:text-amber-400">NB Nano Banana</h1>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              由 <a href="https://api.kuai.host" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 hover:underline transition-colors">酷爱API</a> 赞助联合开发
-            </p>
           </div>
         </div>
 
@@ -159,34 +122,6 @@ const App: React.FC = () => {
                   </span>
               </div>
           )}
-
-          {installPrompt && (
-            <button
-              onClick={handleInstallClick}
-              className="flex rounded-lg p-2 text-amber-600 dark:text-amber-400 transition hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-700 dark:hover:text-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              title="安装应用"
-            >
-              <Download className="h-6 w-6 animate-attract" />
-            </button>
-          )}
-          <a
-            href="https://www.kuai.host/7798503m0"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group rounded-lg p-2 text-gray-500 dark:text-gray-400 transition hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-            title="使用教程"
-          >
-            <BookOpen className="h-6 w-6 group-hover:scale-110 transition-transform" />
-          </a>
-          <a
-            href="https://github.com/aigem/nbnb"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group rounded-lg p-2 text-gray-500 dark:text-gray-400 transition hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
-            title="GitHub 仓库"
-          >
-            <Github className="h-6 w-6 animate-heartbeat-mixed group-hover:animate-none" />
-          </a>
 
           {/* API Key button - Always visible for setting/changing key */}
           <button
